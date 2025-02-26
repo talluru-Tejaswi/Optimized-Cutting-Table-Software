@@ -1,64 +1,296 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}Default site description{% endblock %}">
-    <meta name="author" content="Your Name">
-    <title>{% block title %}My Site{% endblock %}</title>
-    <link rel="icon" href="{% static 'favicon.ico' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/css/bootstrap.min.css">
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}My App{% endblock %}</title>
+    <!-- Bootstrap CSS (latest CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <!-- Bootstrap Icons (latest CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Font Awesome (latest CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+      }
+      /* Navbar */
+      .navbar-custom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        height: auto;
+        z-index: 1030;
+      }
+      /* Sidebar (desktop) */
+      #sidebarMenu {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        width: 280px;
+        overflow-y: auto;
+        transition: width 0.3s;
+        border-right: 1px solid rgba(0, 0, 0, 0.125);
+      }
+      #sidebarMenu.collapsed {
+        width: 80px;
+      }
+      /* Hide text in collapsed mode */
+      #sidebarMenu.collapsed .sidebar-header,
+      #sidebarMenu.collapsed .nav-link span,
+      #sidebarMenu.collapsed .btn-toggle span,
+      #sidebarMenu.collapsed .btn-toggle-nav a span {
+        display: none;
+      }
+      #sidebarMenu.collapsed .nav-link,
+      #sidebarMenu.collapsed .btn-toggle,
+      #sidebarMenu.collapsed .btn-toggle-nav a {
+        justify-content: center;
+      }
+      #sidebarMenu.collapsed .arrow {
+        display: none;
+      }
+      /* Sidebar (mobile offcanvas) */
+      @media (max-width: 767.98px) {
+        #sidebarMenu {
+          position: fixed;
+          top: 56px;
+          left: 0;
+          width: 280px;
+          height: calc(100vh - 56px);
+          transform: translateX(-100%);
+          transition: transform 0.3s ease-in-out;
+          z-index: 1050;
+        }
+        #sidebarMenu.show {
+          transform: translateX(0);
+        }
+      }
+      /* Main content offset */
+      @media (min-width: 768px) {
+        #mainContent {
+          margin-left: 280px;
+          transition: margin-left 0.3s;
+        }
+        #sidebarMenu.collapsed ~ #mainContent {
+          margin-left: 80px;
+        }
+      }
+      @media (max-width: 767.98px) {
+        #mainContent {
+          margin-left: 0 !important;
+        }
+      }
+      /* Nav link styles */
+      .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+      }
+      .nav-link i {
+        font-size: 1.3rem;
+        margin-right: 0.75rem;
+      }
+      .nav-link:hover {
+        background-color: var(--bs-tertiary-bg);
+      }
+      /* Collapsible toggle button */
+      .btn-toggle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        background: none;
+      }
+      .btn-toggle i {
+        font-size: 1.3rem;
+        margin-right: 0.75rem;
+      }
+      .btn-toggle:hover {
+        background-color: var(--bs-tertiary-bg);
+      }
+      .arrow {
+        margin-left: auto;
+        transition: transform 0.2s;
+      }
+      .btn-toggle[aria-expanded="true"] .arrow {
+        transform: rotate(90deg);
+      }
+      .btn-toggle-nav a {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+      }
+      /* Footer */
+      footer {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+    </style>
     {% block extra_css %}{% endblock %}
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="{% url 'home' %}">My Site</a>
-                <button class="navbar-toggler" type="button" 
-                        data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="offcanvas offcanvas-end bg-primary text-white" tabindex="-1" 
-                     id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menu</h5>
-                        <button type="button" class="btn-close btn-close-white" 
-                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <ul class="navbar-nav flex-grow-1 pe-3">
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-                                   href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>
-                                   Home
-                                </a>
-                            </li>
-                            <!-- Add other nav items similarly -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <div class="container my-5">
-            {% block content %}{% endblock %}
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-light navbar-custom fixed-top px-3">
+      <!-- Sidebar toggle -->
+      <button id="sidebarCollapse" class="btn btn-outline-secondary me-2" type="button" aria-label="Toggle sidebar">
+        <i class="bi bi-list" style="font-size:1.4rem;"></i>
+      </button>
+      <!-- Octopus Icon -->
+      
+      <div class="ms-auto d-flex align-items-center">
+        <!-- Dark mode toggle -->
+        <button id="themeToggle" class="btn btn-outline-secondary me-3" type="button" aria-label="Toggle dark mode">
+          <i class="bi bi-moon-stars-fill" style="font-size:1.3rem;"></i>
+        </button>
+        <!-- Auth check -->
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle" style="font-size:1.4rem;"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
         </div>
+        {% else %}
+        <button class="btn btn-outline-primary" type="button">
+          <i class="bi bi-person-plus-fill" style="font-size:1.3rem;"></i> Sign Up
+        </button>
+        {% endif %}
+      </div>
+    </nav>
+
+    <!-- SIDEBAR -->
+    <nav id="sidebarMenu" class="bg-light">
+      <div class="d-flex flex-column h-100">
+        <div class="p-3 border-bottom sidebar-header">
+          <h4 class="m-0"><i class="fa-brands fa-octopus-deploy" style="font-size:1.5rem;"></i>&nbsp;OCTS</h4>
+        </div>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="bi bi-house-fill"></i><span>Home</span>
+            </a>
+          </li>
+          <li>
+            <button class="btn btn-toggle" data-bs-toggle="collapse" data-bs-target="#pages-collapse" aria-expanded="false">
+              <i class="bi bi-menu-button-wide-fill"></i><span>Pages</span>
+              <i class="bi bi-chevron-right arrow"></i>
+            </button>
+            <div class="collapse" id="pages-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li>
+                  <a href="#" class="nav-link">
+                    <i class="bi bi-info-circle-fill"></i><span>About</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="nav-link">
+                    <i class="bi bi-telephone-fill"></i><span>Contact</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <!-- Bottom section -->
+        <div class="mt-auto border-top p-3">
+        {% if user.is_authenticated %}
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <button class="btn btn-toggle" data-bs-toggle="collapse" data-bs-target="#profile-collapse" aria-expanded="false">
+                  <i class="bi bi-person-circle fs-5"></i><span>Profile</span>
+                  <i class="bi bi-chevron-right arrow"></i>
+                </button>
+                <div class="collapse" id="profile-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                      <a href="#" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-pencil-square me-2"></i><span>Edit Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-box-arrow-right me-2"></i><span>Sign out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>              
+            </li>
+        </ul>
+        {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="mainContent" class="pt-5">
+      {% block content %}
+      <div class="container mt-4">
+        <h1>Welcome</h1>
+        <p>Main content goes here...</p>
+      </div>
+      {% endblock %}
     </main>
 
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container">
-            <!-- Enhanced footer content here -->
-        </div>
+    <!-- FOOTER -->
+    <footer class="py-3 bg-light">
+      <div class="container text-center">
+        <span class="text-muted">&copy; 2025 OCTUS, LLC</span>
+      </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+      // Sidebar toggle
+      const sidebarBtn = document.getElementById('sidebarCollapse');
+      const sidebarMenu = document.getElementById('sidebarMenu');
+      sidebarBtn.addEventListener('click', () => {
+        if (window.innerWidth < 768) {
+          sidebarMenu.classList.toggle('show');
+        } else {
+          sidebarMenu.classList.toggle('collapsed');
+        }
+      });
+      // Ensure correct sidebar state on resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          sidebarMenu.classList.remove('show');
+        } else {
+          sidebarMenu.classList.remove('collapsed');
+        }
+      });
+      // Dark mode toggle
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        const html = document.documentElement;
+        const newTheme = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-bs-theme', newTheme);
+
+        const navbar = document.querySelector('.navbar-custom');
+        const footer = document.querySelector('footer');
+        if (newTheme === 'dark') {
+          sidebarMenu.classList.remove('bg-light');
+          sidebarMenu.classList.add('bg-dark', 'text-white');
+          navbar.classList.remove('bg-light');
+          navbar.classList.add('bg-dark', 'navbar-dark');
+          footer.classList.remove('bg-light');
+          footer.classList.add('bg-dark', 'text-white');
+        } else {
+          sidebarMenu.classList.remove('bg-dark', 'text-white');
+          sidebarMenu.classList.add('bg-light');
+          navbar.classList.remove('bg-dark', 'navbar-dark');
+          navbar.classList.add('bg-light');
+          footer.classList.remove('bg-dark', 'text-white');
+          footer.classList.add('bg-light');
+        }
+      });
+    </script>
     {% block extra_js %}{% endblock %}
-    <!-- Add the mobile offcanvas closing script here -->
-</body>
+  </body>
 </html>
