@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'core',
     'dashboard',
     'optimizer',
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
