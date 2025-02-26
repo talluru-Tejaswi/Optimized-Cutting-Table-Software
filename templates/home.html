@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_description %}Welcome to My Site - Your premier destination for...{% endblock %}
+
+{% block title %}Home - My Site{% endblock %}
+
+{% block content %}
+<section class="hero-section text-center py-5">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome to OCTS</h1>
+        <p class="lead mb-4">Discover amazing content and services tailored just for you</p>
+        <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+    </div>
+</section>
+
+<section class="features-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose Us?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title"><i class="bi bi-lightning-charge"></i> Fast Service</h3>
+                        <p class="card-text">Experience blazing-fast response times and seamless performance.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title"><i class="bi bi-shield-check"></i> Secure</h3>
+                        <p class="card-text">Your data is protected with enterprise-grade security measures.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title"><i class="bi bi-people"></i> User-Friendly</h3>
+                        <p class="card-text">Intuitive interface designed for the best user experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section py-5 text-white bg-primary">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="mb-4">Join thousands of satisfied users today</p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="#" class="btn btn-light btn-lg">Sign Up Free</a>
+            <a href="#" class="btn btn-outline-light btn-lg">Learn More</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add any home-page specific JavaScript here
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Home page loaded');
+});
+</script>
+{% endblock %}
