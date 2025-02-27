@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Verify Your Email</title>
+  </head>
+  <body>
+    <p>Hello {{ username }},</p>
+    <p>Thank you for registering at Service-Verse.</p>
+    <p>Please verify your email by clicking the link below:</p>
+    <p><a href="http://yourdomain.com{% url 'verify_email' token %}">Verify Email</a></p>
+    <p>Regards,<br/>Service-Verse Team</p>
+  </body>
+</html>

@@ -147,19 +147,19 @@
         </button>
         <!-- Auth check -->
         {% if user.is_authenticated %}
-        <div class="dropdown">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle" style="font-size:1.4rem;"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
-          </ul>
-        </div>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle" style="font-size:1.4rem;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="{% url 'profile_update' %}">Edit Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Sign out</a></li>
+            </ul>
+          </div>
         {% else %}
-        <button class="btn btn-outline-primary" type="button">
-          <i class="bi bi-person-plus-fill" style="font-size:1.3rem;"></i> Sign Up
-        </button>
+          <a class="btn btn-outline-primary" href="{% url 'register' %}">
+            <i class="bi bi-person-plus-fill" style="font-size:1.3rem;"></i> Sign Up
+          </a>
         {% endif %}
       </div>
     </nav>
