@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Project Details</h1>
+  <div class="row">
+    <!-- Main Project Info -->
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">{{ project.name }}</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <strong>Material Type:</strong> {{ project.material_type }}
+            </li>
+            <li class="list-group-item">
+              <strong>Stock Size:</strong> {{ project.stock_width }} x {{ project.stock_height }}
+            </li>
+            <li class="list-group-item">
+              <strong>Status:</strong> {{ project.status|capfirst }}
+            </li>
+            <li class="list-group-item">
+              <strong>Created At:</strong> {{ project.created_at|date:"Y-m-d H:i" }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Project Info -->
+
+    <!-- Actions Card -->
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0">Actions</h5>
+        </div>
+        <div class="card-body">
+          <a href="#" class="btn btn-primary w-100 mb-2">
+            <i class="bi bi-file-earmark-arrow-down me-1"></i> Export Results
+          </a>
+          <!-- You can add more action buttons here -->
+          <a href="{% url 'optimizer:new_project' %}" class="btn btn-outline-primary w-100">
+            <i class="bi bi-plus-circle me-1"></i> New Project
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- End Actions Card -->
+  </div>
+</div>
+{% endblock %}

@@ -172,7 +172,7 @@
         </div>
         <ul class="nav nav-pills flex-column mb-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/">
               <i class="bi bi-house-fill"></i><span>Home</span>
             </a>
           </li>
@@ -184,12 +184,18 @@
             <div class="collapse" id="pages-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                 <li>
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'project_list' %}" class="nav-link">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>Projects</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'aboutus' %}" class="nav-link">
                     <i class="bi bi-info-circle-fill"></i><span>About</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'contactus' %}" class="nav-link">
                     <i class="bi bi-telephone-fill"></i><span>Contact</span>
                   </a>
                 </li>
