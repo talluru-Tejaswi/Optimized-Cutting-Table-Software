@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .algorithms import optimize_with_lp, optimize_with_ga
+from .algorithms import optimize_with_lp
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 
@@ -14,7 +14,7 @@ class NewProjectView(FormView):
     form_class = NewProjectForm
 
     def form_valid(self, form):
-        # 1) Create Project
+        # Create the project
         project = Project.objects.create(
             user=self.request.user,
             name=form.cleaned_data['name'],
@@ -26,35 +26,29 @@ class NewProjectView(FormView):
             status='processing'
         )
 
-        # 2) Create Pieces
-        pieces_data = form.cleaned_data['pieces']  # e.g. a list of dicts or parse from text
+        # Create Piece objects based on form data (assumes pieces info is provided)
+        pieces_data = form.cleaned_data.get('pieces', [])
         for pd in pieces_data:
             Piece.objects.create(
                 project=project,
                 width=pd['width'],
                 height=pd['height'],
-                quantity=pd['quantity']
+                quantity=pd.get('quantity', 1)
             )
 
-        # 3) Run the chosen algorithm (synchronously for demonstration)
-        algo = form.cleaned_data['algorithm']
-        if algo == 'LP':
-            result = optimize_with_lp(project)
-        elif algo == 'GA':
-            result = optimize_with_ga(project)
-        else:
-            # placeholder for a hybrid approach
-            result = optimize_with_lp(project)  # or a real hybrid function
+        # Run the optimization algorithm (LP approach for now)
+        result = optimize_with_lp(project)
 
-        # 4) Store results in the project
+        # Save results in the project (assuming utilization field exists)
+        project.utilization = result.get('utilization', 0.0)
         project.status = 'completed'
-        project.utilization = result['utilization']  # assume we have a field
-        # Could store layout as JSON if you have a JSONField
-        # project.layout_data = json.dumps(result['layout'])
         project.save()
 
-        # 5) Redirect to detail page
-        return redirect('optimizer:project_detail', project_id=project.id)
+        # Redirect to the project detail view
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('optimizer:project_detail', kwargs={'project_id': self.object.id})
 
 
 class OptimizeResultView(TemplateView):
