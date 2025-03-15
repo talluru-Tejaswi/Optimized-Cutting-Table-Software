@@ -48,9 +48,9 @@
             <!-- Left column: Image -->
             <div class="col-auto">
               <img src="https://picsum.photos/100/80?random={{ forloop.counter }}"
-                   alt="Project Image"
-                   class="rounded"
-                   style="width:100px; height:80px; object-fit:cover;">
+                  alt="Project Image"
+                  class="rounded"
+                  style="width:100px; height:80px; object-fit:cover;">
             </div>
 
             <!-- Center column: Title, status icon, small progress bar -->
@@ -73,25 +73,49 @@
                 <div class="progress" style="width:100px; height:6px;">
                   {% if project.status == 'processing' %}
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
-                         style="width:50%;"></div>
+                        style="width:50%;"></div>
                   {% else %}
                     <div class="progress-bar bg-success"
-                         style="width:100%;"></div>
+                        style="width:100%;"></div>
                   {% endif %}
                 </div>
               </div>
             </div>
 
-            <!-- Right column: Date and View button -->
+            <!-- Right column: Date and action buttons -->
             <div class="col-auto text-end">
               <p class="mb-1 text-muted">{{ project.created_at|date:"Y-m-d H:i" }}</p>
-              <a href="{% url 'optimizer:project_detail' project.id %}" class="btn btn-primary btn-sm">
-                <i class="bi bi-eye-fill"></i>
-              </a>
+              <div class="d-flex gap-1 justify-content-end">
+                <!-- Details button -->
+                <a href="{% url 'optimizer:project_detail' project.id %}"
+                  class="btn btn-sm btn-primary"
+                  title="View Details">
+                  <i class="bi bi-eye-fill"></i>
+                </a>
+                <!-- 2D view button (Dashboard) -->
+                <a href="{% url 'dashboard:project_visual' project.id %}"
+                  class="btn btn-sm btn-info text-white"
+                  title="2D Visualization">
+                  <i class="bi bi-grid-3x3-gap-fill"></i>
+                </a>
+                <!-- 3D view button (Optimizer) -->
+                <a href="{% url 'optimizer:project_detail_3d' project.id %}"
+                  class="btn btn-sm btn-secondary"
+                  title="3D Visualization">
+                  <i class="bi bi-box"></i>
+                </a>
+                <!-- PDF export button -->
+                <a href="{% url 'optimizer:export_report' project.id %}"
+                  class="btn btn-sm btn-success"
+                  title="Export as PDF">
+                  <i class="bi bi-file-earmark-arrow-down"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
         <!-- END LIST VIEW CONTENT -->
+
 
         <!-- GRID VIEW CONTENT (Custom Cards) -->
         <div class="grid-card d-none position-relative"

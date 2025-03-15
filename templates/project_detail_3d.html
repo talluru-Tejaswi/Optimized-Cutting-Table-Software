@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h1>3D View: {{ project.name }}</h1>
+  <p class="text-muted">Debug Layout Data: {{ layout_data }}</p>
+  <div id="threeContainer" style="width:800px; height:600px;"></div>
+</div>
+
+<!-- Three.js and OrbitControls -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.148.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Layout data from context
+  const layoutData = {{ layout_data|safe }};
+  console.log("layoutData in 3D view:", layoutData);
+
+  // 1) Create the scene
+  const scene = new THREE.Scene();
+  // Optional background color
+  scene.background = new THREE.Color(0xf0f0f0);
+
+  // 2) Camera
+  // We'll place it above the plane looking down at a slight angle
+  const camera = new THREE.PerspectiveCamera(45, 800/600, 0.1, 5000);
+  camera.position.set(200, 300, 400);  // x=200, y=300 up, z=400 forward
+  camera.lookAt(100, 0, 100);
+
+  // 3) Renderer
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(800, 600);
+  document.getElementById('threeContainer').appendChild(renderer.domElement);
+
+  // 4) OrbitControls for pan/zoom
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  // 5) Light
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(100, 300, 100).normalize();
+  scene.add(light);
+
+  // 6) AxesHelper (for debugging)
+  const axesHelper = new THREE.AxesHelper(300);
+  scene.add(axesHelper);
+
+  // 7) Create boxes for each placed piece
+  layoutData.forEach(item => {
+    if (!item.placed) return;  // skip unplaced
+    const w = item.width;
+    const h = item.height;
+    // box geometry: width x thickness x height
+    const geometry = new THREE.BoxGeometry(w, 5, h);
+    // color
+    const material = new THREE.MeshPhongMaterial({ color: 0x87cefa });
+    const mesh = new THREE.Mesh(geometry, material);
+
+    // Place the box
+    // x => item.x + w/2, y => half thickness, z => item.y + h/2
+    mesh.position.set(item.x + w/2, 2.5, item.y + h/2);
+    scene.add(mesh);
+  });
+
+  // 8) Animation loop
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+});
+</script>
+{% endblock %}

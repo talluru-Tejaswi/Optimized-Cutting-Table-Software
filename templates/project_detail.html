@@ -1,52 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-5">
-  <h1 class="mb-4">Project Details</h1>
-  <div class="row">
-    <!-- Main Project Info -->
-    <div class="col-md-8">
-      <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-          <h4 class="mb-0">{{ project.name }}</h4>
-        </div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <strong>Material Type:</strong> {{ project.material_type }}
-            </li>
-            <li class="list-group-item">
-              <strong>Stock Size:</strong> {{ project.stock_width }} x {{ project.stock_height }}
-            </li>
-            <li class="list-group-item">
-              <strong>Status:</strong> {{ project.status|capfirst }}
-            </li>
-            <li class="list-group-item">
-              <strong>Created At:</strong> {{ project.created_at|date:"Y-m-d H:i" }}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- End Main Project Info -->
+  <h1>Project: {{ project.name }}</h1>
+  <p><strong>Material:</strong> {{ project.material_type }}</p>
+  <p><strong>Stock Size:</strong> {{ project.stock_width }} x {{ project.stock_height }}</p>
+  <p><strong>Tool Config:</strong> {{ project.tool_config.name }} ({{ project.tool_config.tool_type }})</p>
+  <p><strong>Status:</strong> {{ project.status|capfirst }}</p>
+  <p><strong>Utilization:</strong> {{ project.utilization|floatformat:2 }}%</p>
+  <p><strong>Created At:</strong> {{ project.created_at|date:"Y-m-d H:i" }}</p>
 
-    <!-- Actions Card -->
-    <div class="col-md-4">
-      <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-          <h5 class="mb-0">Actions</h5>
-        </div>
-        <div class="card-body">
-          <a href="#" class="btn btn-primary w-100 mb-2">
-            <i class="bi bi-file-earmark-arrow-down me-1"></i> Export Results
-          </a>
-          <!-- You can add more action buttons here -->
-          <a href="{% url 'optimizer:new_project' %}" class="btn btn-outline-primary w-100">
-            <i class="bi bi-plus-circle me-1"></i> New Project
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- End Actions Card -->
+  <!-- Section with links to different representations -->
+  <div class="mt-4">
+    <a href="{% url 'dashboard:project_visual' project.pk %}" class="btn btn-primary me-2">
+      2D Visualization
+    </a>
+    <a href="{% url 'optimizer:project_detail_3d' project.pk %}" class="btn btn-secondary me-2">
+      3D Visualization
+    </a>
+    <a href="{% url 'optimizer:export_report' project.pk %}" class="btn btn-success">
+      Export PDF
+    </a>
+  </div>
+
+  <!-- Tabular layout information -->
+  <div class="mt-5">
+    <h2>Optimized Layout Details</h2>
+    {% if layout_data %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Piece ID</th>
+          <th>Placed</th>
+          <th>X</th>
+          <th>Y</th>
+          <th>Width</th>
+          <th>Height</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in layout_data %}
+        <tr>
+          <td>{{ item.piece_id }}</td>
+          <td>{{ item.placed }}</td>
+          <td>{{ item.x|floatformat:2 }}</td>
+          <td>{{ item.y|floatformat:2 }}</td>
+          <td>{{ item.width|floatformat:2 }}</td>
+          <td>{{ item.height|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No layout data available.</p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

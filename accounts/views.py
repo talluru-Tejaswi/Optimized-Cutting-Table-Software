@@ -39,7 +39,7 @@ class EmailNotificationMixin:
 class LoginView(FormView, ActivityLogMixin, EmailNotificationMixin):
     template_name = 'login.html'
     form_class = AuthenticationForm
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('home')
     
     def form_valid(self, form):
         user = form.get_user()
@@ -48,9 +48,14 @@ class LoginView(FormView, ActivityLogMixin, EmailNotificationMixin):
         session_key = self.request.session.session_key or get_random_string(32)
         SessionLog.objects.create(user=user, ip_address=ip, session_key=session_key)
         self.log_activity(user, 'login', 'User logged in.')
-        # Send session login notification
+        
+        # Send session login notification email (if desired)
         self.send_email_notification(user, 'session_login', 'New Login Detected',
                                      'session_login_email.html', {'username': user.username, 'ip': ip})
+        
+        # Add a success message
+        messages.success(self.request, 'You have successfully logged in.')
+        
         return super().form_valid(form)
 
 class RegisterView(FormView, ActivityLogMixin, EmailNotificationMixin):

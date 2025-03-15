@@ -1,16 +1,14 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 {% block content %}
 <div class="container mt-5">
-  <div class="jumbotron text-center py-4">
-    <h1 class="display-5">Create New Project</h1>
-    <p class="lead">Fill out the details to start a new optimization project.</p>
-  </div>
-
-  <form method="post" class="p-4 bg-white shadow rounded">
+  <h1>Create New Project</h1>
+  <form method="post">
     {% csrf_token %}
-    {{ form|crispy }}
+    {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+  <p class="mt-2 text-muted">
+    Custom pieces format: <code>50x30:2, 40x10:3</code>
+  </p>
 </div>
 {% endblock %}

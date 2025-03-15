@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Project Report: {{ project.name }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1, h2, h3 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    svg { margin-top: 1rem; display: block; margin-left: auto; margin-right: auto; }
+    .section { margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <h1>Project Report: {{ project.name }}</h1>
+  <p><strong>Material:</strong> {{ project.material_type }}</p>
+  <p><strong>Stock Size:</strong> {{ project.stock_width }} x {{ project.stock_height }}</p>
+  <p><strong>Tool Config:</strong> {{ project.tool_config.name }} ({{ project.tool_config.tool_type }})</p>
+  <p><strong>Status:</strong> {{ project.status }}</p>
+  <p><strong>Utilization:</strong> {{ project.utilization|floatformat:2 }}%</p>
+  <p><strong>Created At:</strong> {{ project.created_at|date:"Y-m-d H:i" }}</p>
+  
+  <div class="section">
+    <h2>Optimized Layout (SVG Visualization)</h2>
+    <!-- The SVG uses the stock dimensions as its coordinate system -->
+    <svg width="{{ project.stock_width|floatformat:0 }}" 
+         height="{{ project.stock_height|floatformat:0 }}"
+         style="border:1px solid #ccc; background-color: #eee;">
+      {% for item in layout %}
+        {% if item.placed %}
+        <!-- Draw the piece rectangle -->
+        <rect x="{{ item.x|floatformat:2 }}"
+              y="{{ item.y|floatformat:2 }}"
+              width="{{ item.width|floatformat:2 }}"
+              height="{{ item.height|floatformat:2 }}"
+              fill="steelblue"
+              stroke="black"
+              stroke-width="1" />
+        <!-- Label at the precomputed midpoint -->
+        <text x="{{ item.x_mid|floatformat:2 }}"
+              y="{{ item.y_mid|floatformat:2 }}"
+              fill="white"
+              font-size="12"
+              text-anchor="middle"
+              alignment-baseline="middle">
+          {{ item.piece_id }}
+        </text>
+        {% endif %}
+      {% endfor %}
+    </svg>
+  </div>
+  
+  <div class="section">
+    <h2>Optimized Layout (Tabular Details)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Piece ID</th>
+          <th>Placed</th>
+          <th>X</th>
+          <th>Y</th>
+          <th>Width</th>
+          <th>Height</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in layout %}
+        <tr>
+          <td>{{ item.piece_id }}</td>
+          <td>{{ item.placed }}</td>
+          <td>{{ item.x|floatformat:2 }}</td>
+          <td>{{ item.y|floatformat:2 }}</td>
+          <td>{{ item.width|floatformat:2 }}</td>
+          <td>{{ item.height|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="section">
+    <h2>Assembly Instructions</h2>
+    {% if steps %}
+    <ol>
+      {% for step in steps %}
+      <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p>No assembly instructions available.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
