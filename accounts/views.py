@@ -37,7 +37,7 @@ class EmailNotificationMixin:
         return success
 
 class LoginView(FormView, ActivityLogMixin, EmailNotificationMixin):
-    template_name = 'login.html'
+    template_name = 'accounts/login.html'
     form_class = AuthenticationForm
     success_url = reverse_lazy('home')
     
@@ -51,7 +51,7 @@ class LoginView(FormView, ActivityLogMixin, EmailNotificationMixin):
         
         # Send session login notification email (if desired)
         self.send_email_notification(user, 'session_login', 'New Login Detected',
-                                     'session_login_email.html', {'username': user.username, 'ip': ip})
+                                     'accounts/session_login_email.html', {'username': user.username, 'ip': ip})
         
         # Add a success message
         messages.success(self.request, 'You have successfully logged in.')
@@ -59,7 +59,7 @@ class LoginView(FormView, ActivityLogMixin, EmailNotificationMixin):
         return super().form_valid(form)
 
 class RegisterView(FormView, ActivityLogMixin, EmailNotificationMixin):
-    template_name = 'register.html'
+    template_name = 'accounts/register.html'
     form_class = RegistrationForm
     success_url = reverse_lazy('login')
     
@@ -102,7 +102,7 @@ class EmailVerificationView(View):
         return redirect('login')
 
 class ProfileUpdateView(FormView, ActivityLogMixin, EmailNotificationMixin):
-    template_name = 'profile_update.html'
+    template_name = 'accounts/profile_update.html'
     form_class = ProfileUpdateForm
     success_url = reverse_lazy('dashboard')
     
@@ -121,7 +121,7 @@ class ProfileUpdateView(FormView, ActivityLogMixin, EmailNotificationMixin):
         return super().form_valid(form)
 
 class DashboardView(TemplateView):
-    template_name = 'dashboard.html'
+    template_name = 'accounts/dashboard.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

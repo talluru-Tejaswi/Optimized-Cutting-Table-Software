@@ -1,0 +1,212 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block meta_description %}
+Welcome to OCTS – An optimized cutting solution reducing waste, lowering costs, and boosting efficiency for industrial cutting.
+{% endblock %}
+
+{% block title %}Home - OCTS{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+
+<!-- 1) HERO SECTION (bg-body-tertiary) -->
+<section class="hero-section text-center py-5 bg-body-tertiary">
+  <div class="container">
+    <h1 class="display-4 mb-4">Welcome to OCTS</h1>
+    <p class="lead mb-4">
+      Revolutionize your cutting processes with advanced optimization. Reduce material waste,
+      increase efficiency, and discover how our software transforms manufacturing for the better.
+    </p>
+    <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+  </div>
+</section>
+
+<!-- 2) FEATURES SECTION (bg-body) -->
+<section class="features-section py-5 bg-body">
+  <div class="container">
+    <h2 class="text-center mb-5">Why Choose Us?</h2>
+    <div class="row g-4">
+      <!-- Feature 1 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="card-title">
+              <i class="bi bi-lightning-charge"></i> Advanced Optimization
+            </h3>
+            <p class="card-text">
+              Our hybrid approach uses Linear Programming and Genetic Algorithms to maximize every cut,
+              helping you save materials and improve productivity.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature 2 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="card-title">
+              <i class="bi bi-shield-check"></i> Secure & Reliable
+            </h3>
+            <p class="card-text">
+              Built on Django with enterprise-grade security, ensuring safe data handling
+              and stable operations for your critical manufacturing needs.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature 3 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="card-title">
+              <i class="bi bi-people"></i> Real-Time Visualization
+            </h3>
+            <p class="card-text">
+              Leverage SVG and Plotly-based dashboards to preview cutting layouts, track cost savings,
+              and make informed decisions on the fly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3) CTA SECTION (bg-primary text-white) -->
+<section class="cta-section py-5 text-white bg-primary">
+  <div class="container text-center">
+    <h2 class="mb-4">Ready to Transform Your Cutting Processes?</h2>
+    <p class="mb-4">
+      Join thousands of satisfied users who’ve embraced optimized cutting to reduce waste, cut costs,
+      and boost production efficiency.
+    </p>
+    <div class="d-flex gap-3 justify-content-center">
+      <a href="#" class="btn btn-light btn-lg">Sign Up Free</a>
+      <a href="#" class="btn btn-outline-light btn-lg">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- 4) DARK SIGN-UP SECTION (bg-body-secondary) -->
+<section class="py-5 bg-body-secondary">
+  <div class="container text-body">
+    <div class="row align-items-center">
+      <!-- Left text -->
+      <div class="col-md-6 d-flex flex-column justify-content-center">
+        <h2 class="display-5 mb-3">Optimize Your Cutting Processes</h2>
+        <p class="lead">
+          The Optimized Cutting Table Software (OCTS) is engineered to minimize waste and reduce costs
+          through advanced algorithms. Reprogram numerical cutting tables with real-time visualization
+          to achieve sustainable, precise manufacturing.
+        </p>
+        <p>
+          From metal fabrication to woodworking, OCTS leverages linear programming and genetic algorithms
+          to ensure every cut is optimized for minimal material loss and maximum efficiency.
+        </p>
+      </div>
+      <!-- Right sign-up card -->
+      <div class="col-md-5 offset-md-1 mt-4 mt-md-0">
+        <div class="card bg-body p-4 text-body shadow-sm">
+          <h3 class="mb-3">Sign Up for Early Access</h3>
+          <form>
+            <div class="mb-3">
+              <label for="signupEmail" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="signupEmail" placeholder="name@example.com" required>
+            </div>
+            <div class="mb-3">
+              <label for="signupPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="signupPassword" placeholder="********" required>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Get Started</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5) FEATURES WITH TITLE (bg-body-tertiary) -->
+<section class="py-5 bg-body-tertiary">
+  <div class="container text-body">
+    <div class="row g-3 align-items-center">
+      <!-- Left column -->
+      <div class="col-md-6 d-flex flex-column justify-content-center">
+        <h3>Advanced Optimization Techniques</h3>
+        <p class="mb-4">
+          Combining linear programming (LP) and genetic algorithms (GA), our hybrid approach
+          intelligently arranges cutting layouts to reduce raw material usage
+          and improve overall productivity. <strong>Reduce waste by up to 20%</strong>
+          and experience faster production cycles.
+        </p>
+        <button class="btn btn-primary">Learn More</button>
+      </div>
+      <!-- Right column -->
+      <div class="col-md-6">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="p-3 text-center border rounded bg-body text-body">
+              <i class="bi bi-bar-chart-fill fs-1 text-success"></i>
+              <h5 class="mt-3">Real-time Analytics</h5>
+              <p class="mb-0">Monitor efficiency gains and track cost savings as you optimize your cuts.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 text-center border rounded bg-body text-body">
+              <i class="bi bi-aspect-ratio-fill fs-1 text-danger"></i>
+              <h5 class="mt-3">Visualization Tools</h5>
+              <p class="mb-0">Get instant previews of cutting layouts using SVG and Plotly-based dashboards.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 text-center border rounded bg-body text-body">
+              <i class="bi bi-gear-fill fs-1 text-primary"></i>
+              <h5 class="mt-3">Seamless Integration</h5>
+              <p class="mb-0">Easily connect with existing manufacturing setups and data flows.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 text-center border rounded bg-body text-body">
+              <i class="bi bi-cloud-upload-fill fs-1 text-info"></i>
+              <h5 class="mt-3">Cloud-Ready</h5>
+              <p class="mb-0">Scale your optimization to the cloud for real-time collaboration and SaaS delivery.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6) JUMBOTRON (FUTURE DIRECTIONS) -->
+<section class="py-5 bg-body-secondary">
+  <div class="container text-body">
+    <div class="p-5 mb-4 rounded-3 text-center bg-body text-body">
+      <div class="mb-3">
+        <i class="bi bi-rocket-takeoff-fill fs-1 text-primary"></i>
+      </div>
+      <h2 class="display-5 fw-bold">Future Directions</h2>
+      <p class="col-md-8 mx-auto">
+        Looking ahead, OCTS aims to integrate AI-powered deep learning, multi-material support,
+        and SaaS-based real-time analytics. Together, we’ll shape a smarter, more sustainable
+        future for manufacturing.
+      </p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Explore More</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Contact Us</button>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Home page loaded');
+});
+</script>
+{% endblock %}

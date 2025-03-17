@@ -1,11 +1,16 @@
 from django.contrib import admin
 from .models import ToolConfig, FurnitureTemplate, Project, Piece
 
-@admin.register(ToolConfig)
 class ToolConfigAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tool_type', 'size', 'speed', 'power', 'focus')
-    list_filter = ('tool_type',)
-    search_fields = ('name',)
+    list_display = ('name', 'tool_type', 'get_size', 'speed', 'power', 'focus', 'description')
+    
+    def get_size(self, obj):
+        if obj.thickness:
+            return f"{obj.thickness} mm"
+        return "N/A"
+    get_size.short_description = "Size"
+
+admin.site.register(ToolConfig, ToolConfigAdmin)
 
 @admin.register(FurnitureTemplate)
 class FurnitureTemplateAdmin(admin.ModelAdmin):

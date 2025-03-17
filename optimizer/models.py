@@ -1,30 +1,54 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+TOOL_TYPE_CHOICES = [
+    ('blade', 'Blade'),
+    ('laser', 'Laser'),
+]
+
 class ToolConfig(models.Model):
-    TOOL_CHOICES = [
-        ('blade', 'Blade'),
-        ('laser', 'Laser'),
-    ]
     name = models.CharField(max_length=100, unique=True)
-    tool_type = models.CharField(max_length=10, choices=TOOL_CHOICES)
-    size = models.FloatField(help_text="Blade thickness or Laser beam diameter")
-    speed = models.FloatField(help_text="Cutting speed in mm/s")
-    power = models.FloatField(null=True, blank=True, help_text="Laser power if tool_type=laser")
-    focus = models.FloatField(null=True, blank=True, help_text="Laser focus if tool_type=laser")
+    tool_type = models.CharField(max_length=10, choices=TOOL_TYPE_CHOICES)
+    thickness = models.FloatField(
+        null=True, blank=True, 
+        help_text="Blade thickness or Laser beam diameter (mm)"
+    )
+    speed = models.FloatField(
+        null=True, blank=True, 
+        help_text="Cutting speed in mm/s"
+    )
+    power = models.FloatField(
+        null=True, blank=True, 
+        help_text="Laser power if tool_type=laser (Watts)"
+    )
+    focus = models.FloatField(
+        null=True, blank=True, 
+        help_text="Laser focus if tool_type=laser (mm offset)"
+    )
+    notes = models.TextField(
+        null=True, blank=True, 
+        help_text="Any extra details"
+    )
+    description = models.TextField(
+        null=True, blank=True,
+        help_text="A more detailed description or usage guidelines"
+    )
 
     def __str__(self):
         return f"{self.name} ({self.tool_type})"
 
 class FurnitureTemplate(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True)
-    default_pieces = models.TextField(help_text="JSON list of pieces. E.g.: " +
-                                      '[{"label": "Leg", "width": 50, "height": 50, "quantity": 4}, ' +
-                                      '{"label": "Top", "width": 100, "height": 60, "quantity": 1}]')
+    category = models.CharField(max_length=100, blank=True, help_text="Category e.g. Office, Living Room")
+    description = models.TextField(blank=True, help_text="Detailed description")
+    default_pieces = models.TextField(blank=True, help_text="Pieces e.g. '50x30:2, 40x10:3'")
 
     def __str__(self):
         return self.name
+
+    def get_default_pieces(self):
+        return self.default_pieces
+
 
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')

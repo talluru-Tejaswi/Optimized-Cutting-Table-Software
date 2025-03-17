@@ -8,12 +8,12 @@ from optimizer.models import Project
 
 # Create your views here.
 class HomeView(TemplateView):
-    template_name = "home.html"
+    template_name = "core/home.html"
 
 
 class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
-    template_name = "projects_list.html"
+    template_name = "core/projects_list.html"
     context_object_name = "projects"
     ordering = ['-created_at']
 
@@ -23,9 +23,9 @@ class ProjectListView(LoginRequiredMixin, ListView):
 
 
 class ContactusView(TemplateView):
-    template_name = "contactus.html"
+    template_name = "core/contactus.html"
 
 
 
 class AboutusView(TemplateView):
-    template_name = "aboutus.html"
+    template_name = "core/aboutus.html"

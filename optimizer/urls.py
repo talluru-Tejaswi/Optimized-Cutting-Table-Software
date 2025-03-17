@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 
 from optimizer.views import NewProjectView, ProjectDetail3DView, ProjectDetailView, export_report
 app_name = 'optimizer'

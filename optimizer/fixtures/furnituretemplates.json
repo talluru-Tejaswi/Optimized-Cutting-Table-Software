@@ -1,0 +1,83 @@
+[
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Office Desk",
+        "description": "A standard office desk with tabletop and four legs",
+        "default_pieces": "120x60:1, 10x10:4"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Dining Table",
+        "description": "Rectangular dining table seats up to 6 people",
+        "default_pieces": "150x80:1, 10x10:4"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Bookshelf",
+        "description": "Tall bookshelf with multiple shelves",
+        "default_pieces": "80x200:2, 80x20:4"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Coffee Table",
+        "description": "Small coffee table with lower shelf",
+        "default_pieces": "90x50:1, 10x10:4, 90x50:1"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "TV Stand",
+        "description": "TV stand with storage compartments",
+        "default_pieces": "100x40:1, 100x40:1, 20x40:2"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Bed Frame (Queen)",
+        "description": "Standard queen-size bed frame with headboard",
+        "default_pieces": "200x160:1, 10x10:4, 200x80:1"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Nightstand",
+        "description": "Small bedside table with one drawer",
+        "default_pieces": "40x40:1, 10x10:4, 40x10:1"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Wardrobe",
+        "description": "Tall wardrobe with shelves and a hanging rod",
+        "default_pieces": "80x180:2, 80x50:2, 80x10:3"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Outdoor Bench",
+        "description": "Wooden bench suitable for garden or patio",
+        "default_pieces": "120x40:1, 10x10:4, 120x40:1"
+      }
+    },
+    {
+      "model": "optimizer.furnituretemplate",
+      "fields": {
+        "name": "Shoe Rack",
+        "description": "Multi-tier shoe rack for an entry hallway",
+        "default_pieces": "80x30:3, 80x30:2"
+      }
+    }
+  ]
+  

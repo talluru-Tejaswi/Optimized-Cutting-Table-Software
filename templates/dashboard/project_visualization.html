@@ -1,0 +1,122 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>2D Cutting Layout</h1>
+  <p><strong>Stock:</strong> {{ stock_width|floatformat:1 }} x {{ stock_height|floatformat:1 }}</p>
+
+  <!-- The Plotly container -->
+  <div id="layoutPlot" style="width:800px; height:600px;"></div>
+
+  <!-- Plotly JS -->
+  <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1) Parse the layout data from Django context
+    const layoutData = JSON.parse('{{ layout_data_json|escapejs }}');
+    const stockW = {{ stock_width|floatformat:"2" }};
+    const stockH = {{ stock_height|floatformat:"2" }};
+
+    // 2) Build Plotly shapes array (each piece as a rectangle)
+    let shapes = [];
+    layoutData.forEach(item => {
+      if (!item.placed) return;
+      shapes.push({
+        type: 'rect',
+        xref: 'x',
+        yref: 'y',
+        x0: item.x,
+        y0: item.y,
+        x1: item.x + item.width,
+        y1: item.y + item.height,
+        line: { color: '#FFFFFF', width: 1 },  // white border
+        fillcolor: '#1E90FF',  // or 'steelblue'
+        opacity: 1.0
+      });
+    });
+
+    // 3) Prepare scatter data for piece labels + hover
+    let xCoords = [];
+    let yCoords = [];
+    let textLabels = [];
+    let hoverLabels = [];
+
+    layoutData.forEach(item => {
+      if (item.placed) {
+        xCoords.push(item.x_mid);
+        yCoords.push(item.y_mid);
+        textLabels.push(String(item.piece_id));
+        // Build a hover string with more details
+        let details = `Piece ${item.piece_id}<br>` +
+                      `Width: ${item.width}, Height: ${item.height}<br>` +
+                      `Origin: (${item.x}, ${item.y})`;
+        hoverLabels.push(details);
+      }
+    });
+
+    let labelTrace = {
+      type: 'scatter',
+      mode: 'markers+text',
+      x: xCoords,
+      y: yCoords,
+      text: textLabels,
+      textposition: 'middle center',
+      textfont: {
+        family: 'Arial',
+        size: 12,
+        color: '#FFFFFF'  // label text color for dark background
+      },
+      marker: {
+        size: 20,
+        color: 'rgba(0,0,0,0)',  // invisible marker
+        line: { width: 0 },
+      },
+      hoverinfo: 'text',
+      hovertext: hoverLabels,
+      name: 'Pieces'
+    };
+
+    // 4) Build the layout config
+    let layout = {
+      title: {
+        text: '2D Cutting Layout',
+        font: { color: '#FFFFFF' } // chart title color
+      },
+      shapes: shapes,
+      xaxis: {
+        range: [0, stockW],
+        showgrid: true,
+        gridcolor: '#444444',      // darker grid lines
+        zeroline: false,
+        linecolor: '#AAAAAA',      // axis line
+        tickfont: { color: '#FFFFFF' },
+        title: 'X',
+        titlefont: { color: '#FFFFFF' }
+      },
+      yaxis: {
+        range: [stockH, 0],  // reversed so 0 at top
+        autorange: false,
+        showgrid: true,
+        gridcolor: '#444444',
+        zeroline: false,
+        linecolor: '#AAAAAA',
+        tickfont: { color: '#FFFFFF' },
+        scaleanchor: 'x',
+        title: 'Y',
+        titlefont: { color: '#FFFFFF' }
+      },
+      margin: { l: 50, r: 50, t: 50, b: 50 },
+      paper_bgcolor: '#222222',  // outside area
+      plot_bgcolor: '#222222'    // inside plot area
+    };
+
+    let data = [ labelTrace ];
+
+    // 5) Render with Plotly
+    Plotly.newPlot('layoutPlot', data, layout);
+  });
+  </script>
+</div>
+{% endblock %}

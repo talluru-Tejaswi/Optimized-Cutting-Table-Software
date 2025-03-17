@@ -1,0 +1,133 @@
+[
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "X-Acto Precision 0.1mm",
+        "tool_type": "blade",
+        "thickness": 0.1,
+        "speed": 60.0,
+        "power": null,
+        "focus": null,
+        "notes": "Fine craft cuts",
+        "description": "X-Acto brand, good for small detail"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Stanley FatMax 0.2mm",
+        "tool_type": "blade",
+        "thickness": 0.2,
+        "speed": 50.0,
+        "power": null,
+        "focus": null,
+        "notes": "Heavy-duty utility blade",
+        "description": "Stanley brand for general usage"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Olfa UltraSharp 0.3mm",
+        "tool_type": "blade",
+        "thickness": 0.3,
+        "speed": 55.0,
+        "power": null,
+        "focus": null,
+        "notes": "Durable edge, mid-range thickness",
+        "description": "Olfa brand, widely used in crafts"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Fiskars Titanium 0.4mm",
+        "tool_type": "blade",
+        "thickness": 0.4,
+        "speed": 45.0,
+        "power": null,
+        "focus": null,
+        "notes": "Titanium coating for extended life",
+        "description": "Fiskars brand, good for heavier cuts"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "DeWalt ToughCut 0.5mm",
+        "tool_type": "blade",
+        "thickness": 0.5,
+        "speed": 40.0,
+        "power": null,
+        "focus": null,
+        "notes": "For thicker materials, robust",
+        "description": "DeWalt brand, construction grade"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Glowforge Plus 40W",
+        "tool_type": "laser",
+        "thickness": null,
+        "speed": 70.0,
+        "power": 40.0,
+        "focus": 1.0,
+        "notes": "Desktop laser, small biz",
+        "description": "Glowforge for acrylic & wood up to ~6mm"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Trotec Speedy 60W",
+        "tool_type": "laser",
+        "thickness": null,
+        "speed": 60.0,
+        "power": 60.0,
+        "focus": 2.0,
+        "notes": "Mid-range industrial system",
+        "description": "Trotec brand, robust for production"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Thunder Laser Nova 100W",
+        "tool_type": "laser",
+        "thickness": null,
+        "speed": 50.0,
+        "power": 100.0,
+        "focus": 2.5,
+        "notes": "High-power CO2 laser",
+        "description": "Cuts thicker acrylic or wood up to ~12mm"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Boss Laser LS-1630 70W",
+        "tool_type": "laser",
+        "thickness": null,
+        "speed": 55.0,
+        "power": 70.0,
+        "focus": 2.0,
+        "notes": "Handles wood & acrylic up to ~10mm",
+        "description": "Boss Laser brand, popular mid-range"
+      }
+    },
+    {
+      "model": "optimizer.toolconfig",
+      "fields": {
+        "name": "Orion Motor Tech 60W",
+        "tool_type": "laser",
+        "thickness": null,
+        "speed": 60.0,
+        "power": 60.0,
+        "focus": 1.8,
+        "notes": "Budget-friendly Chinese laser",
+        "description": "Widely used for hobby & small shops"
+      }
+    }
+  ]
+  
