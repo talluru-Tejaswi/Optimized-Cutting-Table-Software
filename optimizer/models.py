@@ -56,6 +56,12 @@ class Project(models.Model):
     material_type = models.CharField(max_length=50)
     stock_width = models.FloatField()
     stock_height = models.FloatField()
+    stock_depth = models.FloatField(default=5.0, help_text="Depth (thickness) of the base stock in mm")
+    algorithm = models.CharField(
+    max_length=20,
+    default='lp',
+    help_text="Optimization method: lp, ga, or hybrid"
+    )
     tool_config = models.ForeignKey(ToolConfig, on_delete=models.SET_NULL, null=True)
     furniture_template = models.ForeignKey(FurnitureTemplate, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=20, default='processing')

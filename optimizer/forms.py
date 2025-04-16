@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit, HTML, Field
-from .models import Piece, Project, ToolConfig, FurnitureTemplate
+from .models import Project, ToolConfig, FurnitureTemplate
 
 MATERIAL_CHOICES = [
     ('wood', 'Wood'),
@@ -21,6 +21,12 @@ class NewProjectForm(forms.ModelForm):
         queryset=ToolConfig.objects.all(),
         required=True,
         label="Tool Configuration"
+    )
+    stock_depth = forms.FloatField(
+        label="Stock Base Depth (mm)",
+        initial=5.0,
+        min_value=0.1,
+        help_text="Thickness of the base material in mm"
     )
     furniture_template = forms.ModelChoiceField(
         queryset=FurnitureTemplate.objects.all(),
@@ -48,6 +54,7 @@ class NewProjectForm(forms.ModelForm):
             'material_type', 
             'stock_width', 
             'stock_height', 
+            "stock_depth",
             'tool_config', 
             'furniture_template', 
             'custom_pieces',
@@ -56,10 +63,9 @@ class NewProjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(NewProjectForm, self).__init__(*args, **kwargs)
-        # Initialize Crispy Forms helper
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
-        self.helper.form_action = ''  # Specify URL if needed
+        self.helper.form_action = ''
         self.helper.label_class = 'fw-bold'
         self.helper.field_class = 'mb-3'
         self.helper.layout = Layout(
@@ -69,7 +75,9 @@ class NewProjectForm(forms.ModelForm):
             ),
             Row(
                 Column('stock_width', css_class='col-md-6'),
-                Column('stock_height', css_class='col-md-6')
+                Column('stock_height', css_class='col-md-6'),
+                Column('stock_depth', css_class='col-md-4'),  # ✅ Add this line
+
             ),
             Field('tool_config'),
             Field('furniture_template'),
@@ -84,72 +92,23 @@ class NewProjectForm(forms.ModelForm):
             Submit('submit', 'Create Project', css_class='btn btn-primary')
         )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        stock_width = cleaned_data.get('stock_width')
-        stock_height = cleaned_data.get('stock_height')
-
-        if stock_width is None or stock_width <= 0:
-            self.add_error('stock_width', "Stock width must be a positive number.")
-        if stock_height is None or stock_height <= 0:
-            self.add_error('stock_height', "Stock height must be a positive number.")
-
-        min_dimension = 10  # or any minimum value you require
-        if stock_width < min_dimension:
-            self.add_error('stock_width', f"Stock width must be at least {min_dimension} units.")
-        if stock_height < min_dimension:
-            self.add_error('stock_height', f"Stock height must be at least {min_dimension} units.")
-
-        return cleaned_data
-    
+    @staticmethod
     def parse_piece_string(piece_str):
-        """
-        Parse a string formatted as '50x30:2, 40x10:3' into a list of dictionaries.
-        Each dictionary contains 'width', 'height', and 'quantity'.
-        """
-        items = []
-        for part in piece_str.split(','):
+        pieces = []
+        for part in piece_str.split(","):
             part = part.strip()
             if not part:
                 continue
             try:
-                dims, qty_str = part.split(':')
-                w_str, h_str = dims.split('x')
-                w = float(w_str)
-                h = float(h_str)
-                qty = int(qty_str)
-                items.append({'width': w, 'height': h, 'quantity': qty})
-            except ValueError:
-                # If parsing fails for any part, skip that segment.
+                dims, qty = part.split(":")
+                w, h = dims.split("x")
+                w = float(w)
+                h = float(h)
+                q = int(qty)
+                if w > 0 and h > 0 and q > 0:
+                    pieces.append({"width": w, "height": h, "quantity": q})
+            except Exception:
                 continue
-        return items
+        return pieces
 
-    def save(self, commit=True):
-        """
-        Overridden save() method for the NewProjectForm.
-        If a FurnitureTemplate is selected and no custom pieces are provided,
-        auto-generate the custom_pieces from the template's default string.
-        Then, parse the pieces string and create corresponding Piece objects.
-        """
-        instance = super().save(commit=False)
-        template = self.cleaned_data.get('furniture_template')
-        custom = self.cleaned_data.get('custom_pieces', '').strip()
 
-        # Use template defaults if provided and custom input is blank.
-        if template and not custom:
-            custom = template.get_default_pieces()  # Should return a string like "50x30:2, 40x10:3"
-        
-        if commit:
-            # Save the project instance first so we have an ID for related pieces.
-            instance.save()
-            # Parse the piece string into a list of piece dictionaries.
-            piece_data = parse_piece_string(custom)
-            # Create Piece objects for each parsed entry.
-            for item in piece_data:
-                Piece.objects.create(
-                    project=instance,
-                    width=item['width'],
-                    height=item['height'],
-                    quantity=item['quantity']
-                )
-        return instance

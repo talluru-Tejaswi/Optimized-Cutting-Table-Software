@@ -10,3 +10,12 @@ def div(value, arg):
         return float(value) / float(arg)
     except:
         return value
+    
+@register.filter
+def get_item(value, key):
+    try:
+        if isinstance(value, dict):
+            return value.get(key, '')
+        return ''
+    except:
+        return ''

@@ -1,0 +1,57 @@
+{
+    "Office Desk": [
+      "Attach Piece A (10x10) to each corner of Piece B (120x60).",
+      "Secure all four legs with screws.",
+      "Flip the desk upright."
+    ],
+    "Dining Table": [
+      "Connect legs (10x10) to the underside of Piece A (150x80).",
+      "Tighten all bolts securely.",
+      "Ensure the table is level before use."
+    ],
+    "Bookshelf": [
+      "Place the first vertical side (80x200) flat on the floor.",
+      "Attach shelves (80x20) evenly spaced to one side.",
+      "Add the second vertical side (80x200) and secure the shelves in between.",
+      "Nail a thin backboard if applicable."
+    ],
+    "Coffee Table": [
+      "Lay one large piece (90x50) down as the base.",
+      "Attach legs (10x10) to each corner.",
+      "Place the second piece (90x50) as the top and secure it.",
+      "Tighten all leg connections."
+    ],
+    "TV Stand": [
+      "Assemble base (100x40) with vertical dividers (20x40).",
+      "Add the top panel (100x40) and secure it.",
+      "Ensure all dividers are aligned."
+    ],
+    "Bed Frame (Queen)": [
+      "Connect two long side panels (200x160 and 200x80).",
+      "Attach four legs (10x10) to each corner.",
+      "Mount the headboard (200x80) and secure all joints."
+    ],
+    "Nightstand": [
+      "Attach the four legs (10x10) to base (40x40).",
+      "Secure drawer front (40x10) above the legs.",
+      "Top panel (40x40) goes last."
+    ],
+    "Wardrobe": [
+      "Stand two tall side panels (80x180) upright.",
+      "Place and secure bottom panels (80x50).",
+      "Add internal dividers (80x10) across the width.",
+      "Drill and install hanger rod if needed."
+    ],
+    "Outdoor Bench": [
+      "Lay one 120x40 plank flat as the seat.",
+      "Attach legs (10x10) to underside of seat.",
+      "Place second plank (120x40) above legs and fasten.",
+      "Test stability before use."
+    ],
+    "Shoe Rack": [
+      "Attach two vertical supports to base (80x30).",
+      "Add 3–5 shelf panels (80x30) evenly spaced.",
+      "Ensure spacing is symmetrical and screw securely."
+    ]
+  }
+  

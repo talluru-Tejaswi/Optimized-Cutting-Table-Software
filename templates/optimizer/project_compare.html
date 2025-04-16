@@ -1,0 +1,181 @@
+{% extends "core/base.html" %}
+{% load mathfilters %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">
+    <i class="bi bi-bar-chart-line-fill me-2"></i>
+    Optimizer Comparison: {{ project.name }}
+  </h2>
+
+  <!-- Filter Controls -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label class="form-label fw-bold">Tool Configuration</label>
+      <select class="form-select" id="toolSelect" disabled>
+        {% for tool in tool_configs %}
+          <option value="{{ tool.id }}" {% if tool == project.tool_config %}selected{% endif %}>
+            {{ tool.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label fw-bold">Material Type</label>
+      <select class="form-select" id="materialSelect" disabled>
+        {% for mat in materials %}
+          <option value="{{ mat }}" {% if mat == project.material_type %}selected{% endif %}>
+            {{ mat|title }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Comparison Chart -->
+  <div class="mb-4">
+    <h5>Utilization Comparison</h5>
+    <div class="progress" style="height: 30px;">
+      <div id="bar-lp" class="progress-bar bg-success" role="progressbar" style="width: 0%">LP</div>
+      <div id="bar-ga" class="progress-bar bg-warning text-dark" role="progressbar" style="width: 0%">GA</div>
+      <div id="bar-hybrid" class="progress-bar bg-info text-dark" role="progressbar" style="width: 0%">Hybrid</div>
+    </div>
+  </div>
+
+  <!-- Comparison Grid -->
+  <div class="row text-center">
+    {% for comparison in comparisons %}
+      {% with method=comparison.method result=comparison.result %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white fw-bold">
+            {{ method }} Optimization
+          </div>
+          <div class="card-body">
+            <p><strong>Utilization:</strong> <span id="util-{{ method|lower }}">{{ result.utilization }}%</span></p>
+
+            <!-- SVG Layout Preview -->
+            <svg width="100%" height="200"
+                viewBox="0 0 {{ project.stock_width }} {{ project.stock_height }}"
+                style="border: 1px solid #ccc;">
+              {% for piece in result.layout %}
+                {% if piece.placed and piece.width > 0 and piece.height > 0 %}
+                  <rect x="{{ piece.x }}" y="{{ piece.y }}"
+                        width="{{ piece.width }}" height="{{ piece.height }}"
+                        fill="#3498db" stroke="#2c3e50" stroke-width="0.5"/>
+                  <text x="{{ piece.x|add:piece.width|div:2 }}"
+                        y="{{ piece.y|add:piece.height|div:2 }}"
+                        fill="white" text-anchor="middle" font-size="4">
+                    ID {{ piece.piece_id|default:piece.id }}
+                  </text>
+                {% endif %}
+              {% endfor %}
+            </svg>
+
+            <!-- Layout Table -->
+            <div style="max-height: 200px; overflow-y: auto;">
+              <table class="table table-sm table-borderless text-start" id="layout-{{ method|lower }}">
+                <thead>
+                  <tr><th>ID</th><th>Size (W×H)</th><th>Pos (x, y, z)</th></tr>
+                </thead>
+                <tbody>
+                  {% for piece in result.layout|slice:":5" %}
+                    {% if piece.placed %}
+                    <tr>
+                      <td><span class="badge bg-info text-dark">ID {{ piece.piece_id|default:piece.id }}</span></td>
+                      <td>{{ piece.width|floatformat:1 }} × {{ piece.height|floatformat:1 }}</td>
+                      <td>({{ piece.x|floatformat:1 }}, {{ piece.y|floatformat:1 }}, {{ piece.z|default:0|floatformat:1 }})</td>
+                    </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% if result.layout|length > 5 %}
+              <small>+ {{ result.layout|length|add:"-5" }} more...</small>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endwith %}
+    {% endfor %}
+  </div>
+
+  <!-- Best Result Footer -->
+  <div class="row mt-4">
+    <div class="col">
+      <div id="best-result-box" class="alert alert-success shadow-sm text-center">
+         ✅ Best Optimization: {{ best_method }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const toolSelect = document.getElementById("toolSelect");
+  const materialSelect = document.getElementById("materialSelect");
+
+  toolSelect.disabled = false;
+  materialSelect.disabled = false;
+
+  function updateComparison() {
+    const toolId = toolSelect.value;
+    const material = materialSelect.value;
+    const projectId = "{{ project.id }}";
+
+    fetch(`/optimizer/${projectId}/compare/api/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tool_config: toolId, material: material }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        alert("Error: " + data.error);
+        return;
+      }
+
+      const barData = {};
+      ["lp", "ga", "hybrid"].forEach(method => {
+        const util = data[method].utilization;
+        const utilEl = document.querySelector(`#util-${method}`);
+        const layoutTable = document.querySelector(`#layout-${method}`);
+        utilEl.textContent = util.toFixed(2) + "%";
+
+        layoutTable.innerHTML = `
+          <thead><tr><th>ID</th><th>Size (W×H)</th><th>Pos (x, y, z)</th></tr></thead><tbody></tbody>
+        `;
+        const tbody = layoutTable.querySelector("tbody");
+
+        (data[method].layout || []).slice(0, 5).forEach(piece => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><span class="badge bg-info text-dark">ID ${piece.piece_id || piece.id}</span></td>
+            <td>${piece.width.toFixed(1)} × ${piece.height.toFixed(1)}</td>
+            <td>(${piece.x.toFixed(1)}, ${piece.y.toFixed(1)}, ${(piece.z || 0).toFixed(1)})</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        barData[method] = util;
+      });
+
+      // Update progress bars
+      document.getElementById("bar-lp").style.width = barData.lp + "%";
+      document.getElementById("bar-ga").style.width = barData.ga + "%";
+      document.getElementById("bar-hybrid").style.width = barData.hybrid + "%";
+      document.getElementById("bar-lp").textContent = "LP (" + barData.lp.toFixed(2) + "%)";
+      document.getElementById("bar-ga").textContent = "GA (" + barData.ga.toFixed(2) + "%)";
+      document.getElementById("bar-hybrid").textContent = "Hybrid (" + barData.hybrid.toFixed(2) + "%)";
+
+      const best = Object.entries(barData).sort((a, b) => b[1] - a[1])[0];
+      document.getElementById("best-result-box").textContent =
+        "✅ Best: " + best[0].toUpperCase() + " | Utilization: " + best[1].toFixed(2) + "%";
+    });
+  }
+
+  toolSelect.addEventListener("change", updateComparison);
+  materialSelect.addEventListener("change", updateComparison);
+});
+</script>
+{% endblock %}

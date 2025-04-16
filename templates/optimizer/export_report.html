@@ -1,95 +1,146 @@
+{% load mathfilters %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Project Report: {{ project.name }}</title>
+  <meta charset="UTF-8">
+  <title>{{ project.name }} - Optimization Report</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1, h2, h3 { color: #333; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    svg { margin-top: 1rem; display: block; margin-left: auto; margin-right: auto; }
-    .section { margin-top: 40px; }
+    body {
+      font-family: "Helvetica", "Arial", sans-serif;
+      margin: 40px;
+      font-size: 14px;
+    }
+    h1, h2, h3 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      margin-top: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f1f1f1;
+    }
+    ol {
+      margin-left: 20px;
+    }
+    svg text {
+      font-size: 4px;
+    }
   </style>
 </head>
 <body>
-  <h1>Project Report: {{ project.name }}</h1>
+
+  <h1>{{ project.name }} - Cutting Optimization Report</h1>
+  <p><strong>Project ID:</strong> {{ project.id }}</p>
+  <p><strong>User:</strong> {{ project.user.username }}</p>
   <p><strong>Material:</strong> {{ project.material_type }}</p>
-  <p><strong>Stock Size:</strong> {{ project.stock_width }} x {{ project.stock_height }}</p>
-  <p><strong>Tool Config:</strong> {{ project.tool_config.name }} ({{ project.tool_config.tool_type }})</p>
+  <p><strong>Stock Dimensions:</strong> {{ project.stock_width }}mm × {{ project.stock_height }}mm × {{ project.stock_depth }}mm</p>
+  <p><strong>Algorithm Used:</strong> {{ project.algorithm|upper }}</p>
+  <p><strong>Utilization:</strong> {{ project.utilization }}%</p>
   <p><strong>Status:</strong> {{ project.status }}</p>
-  <p><strong>Utilization:</strong> {{ project.utilization|floatformat:2 }}%</p>
-  <p><strong>Created At:</strong> {{ project.created_at|date:"Y-m-d H:i" }}</p>
-  
-  <div class="section">
-    <h2>Optimized Layout (SVG Visualization)</h2>
-    <!-- The SVG uses the stock dimensions as its coordinate system -->
-    <svg width="{{ project.stock_width|floatformat:0 }}" 
-         height="{{ project.stock_height|floatformat:0 }}"
-         style="border:1px solid #ccc; background-color: #eee;">
-      {% for item in layout %}
-        {% if item.placed %}
-        <!-- Draw the piece rectangle -->
-        <rect x="{{ item.x|floatformat:2 }}"
-              y="{{ item.y|floatformat:2 }}"
-              width="{{ item.width|floatformat:2 }}"
-              height="{{ item.height|floatformat:2 }}"
-              fill="steelblue"
-              stroke="black"
-              stroke-width="1" />
-        <!-- Label at the precomputed midpoint -->
-        <text x="{{ item.x_mid|floatformat:2 }}"
-              y="{{ item.y_mid|floatformat:2 }}"
+
+  <h2>Layout Preview (Top View)</h2>
+  <svg width="100%" height="400" viewBox="0 0 {{ project.stock_width }} {{ project.stock_height }}" style="border: 1px solid #ccc;">
+    {% for item in layout %}
+      {% if item.placed and item.width > 0 and item.height > 0 %}
+        <!-- Draw piece rectangle -->
+        <rect x="{{ item.x }}" y="{{ item.y }}" width="{{ item.width }}" height="{{ item.height }}"
+              fill="#3498db" stroke="#2c3e50" stroke-width="0.5" />
+
+        <!-- Label at center of piece -->
+        <text x="{{ item.x|add:item.width|div:2 }}"
+              y="{{ item.y|add:item.height|div:2 }}"
               fill="white"
-              font-size="12"
+              font-size="5"
               text-anchor="middle"
-              alignment-baseline="middle">
-          {{ item.piece_id }}
+              alignment-baseline="central">
+          {{ item.piece_id|default:"?" }}
         </text>
-        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </svg>
+
+  <p>Note: The above SVG layout is a simplified representation. For detailed 3D visualization, please refer to the 3D model.</p>  
+  
+
+  <h2>Optimized Layout Details</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Piece ID</th>
+        <th>Placed</th>
+        <th>X</th>
+        <th>Y</th>
+        <th>Z</th>
+        <th>Width</th>
+        <th>Height</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in layout %}
+      <tr>
+        <td>
+          {% if item.piece_id %}
+            {{ item.piece_id }}
+          {% elif item.id %}
+            {{ item.id }}
+          {% else %}
+            ?
+          {% endif %}
+        </td>        
+        <td>{{ item.placed|yesno:"Yes,No" }}</td>
+        <td>{{ item.x }}</td>
+        <td>{{ item.y }}</td>
+        <td>{{ item.z|default:"0" }}</td>
+        <td>{{ item.width }}</td>
+        <td>{{ item.height }}</td>
+      </tr>
       {% endfor %}
-    </svg>
-  </div>
-  
-  <div class="section">
-    <h2>Optimized Layout (Tabular Details)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Piece ID</th>
-          <th>Placed</th>
-          <th>X</th>
-          <th>Y</th>
-          <th>Width</th>
-          <th>Height</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in layout %}
-        <tr>
-          <td>{{ item.piece_id }}</td>
-          <td>{{ item.placed }}</td>
-          <td>{{ item.x|floatformat:2 }}</td>
-          <td>{{ item.y|floatformat:2 }}</td>
-          <td>{{ item.width|floatformat:2 }}</td>
-          <td>{{ item.height|floatformat:2 }}</td>
-        </tr>
+    </tbody>
+  </table>
+
+  <h2>Piece Summary</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Dimensions (W×H)</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% regroup layout|dictsort:"width" by width as width_groups %}
+      {% for wgroup in width_groups %}
+        {% regroup wgroup.list|dictsort:"height" by height as height_groups %}
+        {% for hgroup in height_groups %}
+          <tr>
+            <td>{{ wgroup.grouper }} × {{ hgroup.grouper }}</td>
+            <td>{{ hgroup.list|length }}</td>
+          </tr>
         {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  
-  <div class="section">
-    <h2>Assembly Instructions</h2>
-    {% if steps %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+  <h2>Assembly Instructions</h2>
+  {% if steps %}
     <ol>
       {% for step in steps %}
-      <li>{{ step }}</li>
+        <li>{{ step }}</li>
       {% endfor %}
     </ol>
-    {% else %}
-    <p>No assembly instructions available.</p>
-    {% endif %}
-  </div>
+  {% else %}
+    <p>No assembly instructions available for this project.</p>
+  {% endif %}
+
 </body>
 </html>
